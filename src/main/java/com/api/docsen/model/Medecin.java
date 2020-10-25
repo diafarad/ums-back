@@ -43,6 +43,10 @@ public class Medecin implements Serializable {
     @Column(length = 200)
     private String adresse;
 
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "hopital_id", referencedColumnName = "id")
+    private Hopital hopital;
+
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
     @JoinTable(name = "medecin_specialite",
