@@ -1,10 +1,11 @@
 package com.api.docsen.controller;
 
 import com.api.docsen.config.JwtTokenUtil;
-import com.api.docsen.request.ErrorResponse;
-import com.api.docsen.request.JwtRequest;
-import com.api.docsen.request.Response;
-import com.api.docsen.request.ResponseJwt;
+import com.api.docsen.dao.PatientRepository;
+import com.api.docsen.dao.UserRepository;
+import com.api.docsen.model.Patient;
+import com.api.docsen.model.User;
+import com.api.docsen.exchanges.*;
 import com.api.docsen.service.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -32,6 +33,10 @@ public class JwtAuthenticationController {
     private JwtTokenUtil jwtTokenUtil;
     @Autowired
     private UserDetailsServiceImpl userDetailsService;
+    @Autowired
+    private UserRepository userRepository;
+    @Autowired
+    private PatientRepository patientRepository;
 
 
     @PreAuthorize("hasAuthority('ROLE_USER') or hasAuthority('ROLE_ADMIN')")
@@ -65,6 +70,39 @@ public class JwtAuthenticationController {
                 return ResponseEntity.ok(new Response("error", new ErrorResponse("USER_DISABLED")));
             } catch (BadCredentialsException e) {
                 return ResponseEntity.ok(new Response("error", new ErrorResponse("BAD_CREDENTIALS")));
+            }
+        }
+        return ResponseEntity.ok(new Response("error", new ErrorResponse("INVALID_USERNAME")));
+    }
+
+    @GetMapping("/getUser/{userName}")
+    @ResponseBody
+    public ResponseEntity<?> getUtilisateur(@PathVariable(value = "userName") String username){
+        PatientResponse patientResponse = null;
+        System.out.println("Parameter " + username);
+        User u = userRepository.findByUsername(username);
+        if (u != null){
+            System.out.println("Username : " + u.getUsername() + " Email : " + u.getEmail());
+            Patient p = patientRepository.findPatientByUser_Username(u.getUsername());
+            if (p != null){
+                System.out.println("Patient : " + p.getPrenom() + " " + p.getNom());
+                patientResponse = new PatientResponse();
+                patientResponse.setId(p.getId());
+                patientResponse.setPrenom(p.getPrenom());
+                patientResponse.setNom(p.getNom());
+                patientResponse.setDateNaiss(p.getDatenaissance());
+                patientResponse.setAdresse(p.getAdresse());
+                patientResponse.setTel(p.getTel());
+                patientResponse.setGroupeSanguin(p.getGroupeSanguin());
+                patientResponse.setEmail(u.getEmail());
+                patientResponse.setUsername(u.getUsername());
+                patientResponse.setPassword(u.getPassword());
+                patientResponse.setPhoto(u.getPhoto());
+                return ResponseEntity.ok(new Response("ok", patientResponse));
+            }
+            else{
+                System.out.println("No result for Patient");
+                return ResponseEntity.ok(new Response("error", new ErrorResponse("NO_RESULT")));
             }
         }
         return ResponseEntity.ok(new Response("error", new ErrorResponse("INVALID_USERNAME")));

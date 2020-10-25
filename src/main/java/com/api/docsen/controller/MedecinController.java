@@ -1,7 +1,7 @@
 package com.api.docsen.controller;
 
 import com.api.docsen.dao.MedecinRepository;
-import com.api.docsen.request.ErrorResponse;
+import com.api.docsen.exchanges.ErrorResponse;
 import com.api.docsen.model.Medecin;
 import com.api.docsen.service.IServiceService;
 import com.api.docsen.service.ISpecialiteService;

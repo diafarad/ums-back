@@ -2,6 +2,7 @@ package com.api.docsen.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,7 +14,7 @@ import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
-import java.util.List;
+
 
 
 @Entity
@@ -58,16 +59,13 @@ public class User{
     @JoinColumn(name = "role_id")
     private Role role;
 
-    @JsonIgnoreProperties("user")
-    @OneToMany(mappedBy = "user")
-    private List<Medecin> medecins;
+    @OneToOne(mappedBy = "user")
+    private Medecin medecin;
+    
+    @OneToOne(mappedBy = "user")
+    private Patient patient;
 
-    @JsonIgnoreProperties("user")
-    @OneToMany(mappedBy = "user")
-    private List<Patient> patients;
-
-    @OneToMany(mappedBy = "user")
-    @JsonBackReference
-    private List<Admin> admins;
+    @OneToOne(mappedBy = "user")
+    private Admin admin;
 
 }

@@ -1,4 +1,4 @@
-package com.api.docsen.request;
+package com.api.docsen.exchanges;
 
 import java.io.Serializable;
 

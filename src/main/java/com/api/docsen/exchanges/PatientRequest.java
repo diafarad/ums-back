@@ -1,11 +1,7 @@
-package com.api.docsen.request;
+package com.api.docsen.exchanges;
 
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.persistence.Transient;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.Date;
 
