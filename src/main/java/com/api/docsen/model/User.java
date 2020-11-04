@@ -14,7 +14,8 @@ import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
-
+import java.sql.Blob;
+import java.util.Date;
 
 
 @Entity
@@ -51,8 +52,19 @@ public class User{
 
     private String photo;
 
+    @Lob
+    @Basic(fetch = FetchType.LAZY)
+    private byte[] image;
+
+    @NotBlank
+    @Temporal(TemporalType.DATE)
+    private Date registerAt;
+
+    @Temporal(TemporalType.DATE)
+    private Date lastLog;
+
     @Transient
-    private MultipartFile[] files;
+    private MultipartFile files;
 
     @JsonIgnoreProperties("user")
     @ManyToOne(fetch = FetchType.EAGER)

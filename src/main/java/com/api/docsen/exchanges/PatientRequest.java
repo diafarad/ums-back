@@ -1,7 +1,5 @@
 package com.api.docsen.exchanges;
 
-import org.springframework.web.multipart.MultipartFile;
-
 import java.io.Serializable;
 import java.util.Date;
 
@@ -18,14 +16,15 @@ public class PatientRequest implements Serializable {
     private String password;
     private String email;
     private String photo;
-    private MultipartFile[] files;
+    private String blob;
+    private String registerAt;
 
     //need default constructor for JSON Parsing
     public PatientRequest()
     {
     }
 
-    public PatientRequest(String prenom, String nom, String tel, String adresse, Date dateNaiss, String groupeSanguin, String login, String password, String email, String photo, MultipartFile[] files) {
+    public PatientRequest(String prenom, String nom, String tel, String adresse, Date dateNaiss, String groupeSanguin, String login, String password, String email, String photo, String data, String registerAt) {
         this.prenom = prenom;
         this.nom = nom;
         this.tel = tel;
@@ -36,7 +35,8 @@ public class PatientRequest implements Serializable {
         this.password = password;
         this.email = email;
         this.photo = photo;
-        this.files = files;
+        this.blob = data;
+        this.registerAt = registerAt;
     }
 
     public PatientRequest(String nom, String prenom, String email, String username)
@@ -127,11 +127,19 @@ public class PatientRequest implements Serializable {
         this.photo = photo;
     }
 
-    public MultipartFile[] getFiles() {
-        return files;
+    public String getBlob() {
+        return blob;
     }
 
-    public void setFiles(MultipartFile[] files) {
-        this.files = files;
+    public void setBlob(String blob) {
+        this.blob = blob;
+    }
+
+    public String getRegisterAt() {
+        return registerAt;
+    }
+
+    public void setRegisterAt(String registerAt) {
+        this.registerAt = registerAt;
     }
 }

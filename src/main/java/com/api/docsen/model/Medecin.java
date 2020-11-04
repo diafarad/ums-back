@@ -62,4 +62,7 @@ public class Medecin implements Serializable {
     @JsonBackReference
     private List<RendezVous> rendezVous;
 
+    @OneToMany(mappedBy = "medecin", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JsonBackReference
+    private List<Note> notes;
 }
