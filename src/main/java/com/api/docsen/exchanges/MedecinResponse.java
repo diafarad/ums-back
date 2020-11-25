@@ -19,15 +19,28 @@ public class MedecinResponse implements Serializable {
     private String tel;
     private String adresse;
     private Date dateNaiss;
+    private long idHopital;
     private String hopital;
     private String username;
     private String password;
     private String email;
     private String photo;
-    private MultipartFile[] files;
+    private int idSpecialite;
+    private String specialite;
+    private String image;
+    private String registerAt;
+    //private MultipartFile[] files;
 
     //need default constructor for JSON Parsing
     public MedecinResponse()
     {
+    }
+
+    public MedecinResponse(String nom, String prenom, String email, String username)
+    {
+        this.nom = nom;
+        this.prenom = prenom;
+        this.email = email;
+        this.username = username;
     }
 }

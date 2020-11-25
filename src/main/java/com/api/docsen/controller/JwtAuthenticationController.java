@@ -97,7 +97,7 @@ public class JwtAuthenticationController {
                 patientResponse.setEmail(u.getEmail());
                 patientResponse.setUsername(u.getUsername());
                 patientResponse.setPassword(u.getPassword());
-                patientResponse.setPhoto(u.getPhoto());
+                //patientResponse.setPhoto(u.getPhoto());
                 return ResponseEntity.ok(new Response("ok", patientResponse));
             }
             else{

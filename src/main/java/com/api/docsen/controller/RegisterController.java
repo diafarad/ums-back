@@ -82,7 +82,7 @@ public class RegisterController {
         return outputStream.toByteArray();
     }
 
-    @PostMapping("/upload")
+    /*@PostMapping("/upload")
     public boolean getImage(@RequestParam("file") MultipartFile file) {
 
         System.out.println(file.getName());
@@ -101,7 +101,7 @@ public class RegisterController {
             LoggerFactory.getLogger(this.getClass()).error("pictureupload", e);
             return false;
         }
-    }
+    }*/
 
     @PostMapping("/registerPatient")
     public ResponseEntity<?> addUserPatient(@RequestBody PatientRequest patientRequest) throws IOException {
@@ -120,25 +120,6 @@ public class RegisterController {
             return ResponseEntity.ok(new Response("error", new ErrorResponse("MAIL_EXIST")));
         }
         try {
-            /*byte[] bytes = {};
-            Path path = null;
-            if (!patientRequest.getFiles()[0].getName().equals("")) {
-                MultipartFile file = patientRequest.getFiles()[0];
-                bytes = file.getBytes();
-                path = Paths.get(UPLOADED_FOLDER + file.getOriginalFilename());
-                patientRequest.setPhoto(file.getOriginalFilename());
-            } else {
-                patientRequest.setPhoto("default.jpg");
-            }
-            try {
-                if (bytes.length != 0) {
-                    Files.write(path, bytes);
-                }
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }*/
-
             Role r = roleRepository.findByName(RoleName.ROLE_USER);
             User u = new User();
             System.out.println("REG_AT : "+patientRequest.getRegisterAt());
@@ -152,7 +133,7 @@ public class RegisterController {
             //patientRequest.setPhoto("default.jpg");
             //System.out.println("Photo : "+patientRequest.getPhoto());
            // u.setData(patientRequest.getData());
-            u.setPhoto(patientRequest.getPhoto());
+            //u.setPhoto(patientRequest.getPhoto());
             Patient p = new Patient();
             p.setNom(patientRequest.getNom());
             p.setPrenom(patientRequest.getPrenom());

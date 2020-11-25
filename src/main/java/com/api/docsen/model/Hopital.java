@@ -1,5 +1,6 @@
 package com.api.docsen.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.*;
 
 import javax.persistence.*;
@@ -27,5 +28,6 @@ public class Hopital {
     private String adresse;
 
     @OneToOne(mappedBy = "hopital")
+    @JsonBackReference
     private Medecin medecin;
 }

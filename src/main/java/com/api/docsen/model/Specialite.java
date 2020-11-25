@@ -1,6 +1,8 @@
 package com.api.docsen.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 
 import javax.persistence.*;
@@ -22,17 +24,13 @@ public class Specialite implements Serializable {
     @Column(length = 50)
     private String libelle;
 
-    @JsonIgnore
+    @JsonManagedReference
     @ManyToOne
     @JoinColumn(name = "service_id")
     private Service service;
 
-    @JsonIgnore
-    @ManyToMany(mappedBy = "specialites")
+    @OneToMany(mappedBy = "specialite")
+    @JsonBackReference
     private List<Medecin> medecins;
 
-    @Override
-    public String toString() {
-        return libelle;
-    }
 }

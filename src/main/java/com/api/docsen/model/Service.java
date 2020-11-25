@@ -1,5 +1,6 @@
 package com.api.docsen.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
@@ -21,7 +22,7 @@ public class Service implements Serializable {
     @Column(length = 30)
     private String libelle;
 
-    @JsonIgnore
+    @JsonBackReference
     @OneToMany(mappedBy = "service")
     private List<Specialite> specialites;
 

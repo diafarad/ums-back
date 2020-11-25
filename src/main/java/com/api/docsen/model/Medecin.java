@@ -1,12 +1,9 @@
 package com.api.docsen.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
-import org.hibernate.annotations.NaturalId;
-
 import javax.persistence.*;
-import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
@@ -14,7 +11,7 @@ import java.util.Date;
 import java.util.List;
 
 
-@EqualsAndHashCode(exclude = {"service", "specialites"})
+//@EqualsAndHashCode(exclude = {"service", "specialites"})
 @Entity
 @Setter
 @Getter
@@ -43,19 +40,14 @@ public class Medecin implements Serializable {
     @Column(length = 200)
     private String adresse;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "hopital_id", referencedColumnName = "id")
+    @OneToOne
+    @JoinColumn(name = "hopital_id")
+    @JsonManagedReference
     private Hopital hopital;
 
-    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
-    @JoinTable(name = "medecin_specialite",
-            joinColumns = @JoinColumn(name = "medecin_id"),
-            inverseJoinColumns = @JoinColumn(name = "specialite_id"))
-    private List<Specialite> specialites;
-
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    @OneToOne
+    @JoinColumn(name = "user_id")
+    @JsonManagedReference
     private User user;
 
     @OneToMany(mappedBy = "medecin", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
@@ -65,4 +57,9 @@ public class Medecin implements Serializable {
     @OneToMany(mappedBy = "medecin", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JsonBackReference
     private List<Note> notes;
+
+    @ManyToOne
+    @JoinColumn(name = "idSpecialite")
+    @JsonManagedReference
+    private Specialite specialite;
 }

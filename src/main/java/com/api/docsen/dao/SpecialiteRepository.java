@@ -9,4 +9,5 @@ import java.util.List;
 @Repository
 public interface SpecialiteRepository extends JpaRepository<Specialite, Integer> {
     public List<Specialite> findByService_Id(int id);
+    public Specialite findById(int id);
 }

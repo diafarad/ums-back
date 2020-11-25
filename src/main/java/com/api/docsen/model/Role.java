@@ -1,5 +1,6 @@
 package com.api.docsen.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -26,7 +27,7 @@ public class Role {
     @Column(length = 60)
     private RoleName name;
 
-    @JsonIgnoreProperties("role")
+    @JsonBackReference
     @OneToMany(mappedBy = "role")
     private List<User> users;
 

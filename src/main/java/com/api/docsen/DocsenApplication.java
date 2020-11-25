@@ -11,19 +11,22 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @SpringBootApplication
-public class DocsenApplication /*implements CommandLineRunner*/ {
+public class DocsenApplication implements CommandLineRunner {
 
-    /*@Autowired
-    PasswordEncoder encoder;*/
+    @Autowired
+    PasswordEncoder encoder;
+
+    @Autowired
+    RoleRepository roleRepository;
 
     public static void main(String[] args) {
         SpringApplication.run(DocsenApplication.class, args);
     }
 
-    //@Override
-    //public void run(String... args) throws Exception {
+    @Override
+    public void run(String... args) throws Exception {
         /*Role r = roleRepository.findByName(RoleName.ROLE_USER);
         System.out.println("Id : " + r.getId() + "Role :" + r.getName());*/
-        //System.out.println(encoder.encode("passer"));
-    //}
+        System.out.println(encoder.encode("passer"));
+    }
 }

@@ -1,5 +1,6 @@
 package com.api.docsen.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -27,5 +28,6 @@ public class Note {
 
     @ManyToOne
     @JoinColumn(name = "idMedecin")
+    @JsonManagedReference
     private Medecin medecin;
 }
