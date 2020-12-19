@@ -51,7 +51,7 @@ public class User{
     private String password;
 
     @Lob
-    @Basic(fetch = FetchType.LAZY)
+    @Basic
     private byte[] image;
 
     @NotBlank
@@ -65,20 +65,9 @@ public class User{
     private MultipartFile files;
 
     @JsonManagedReference
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
     @JoinColumn(name = "role_id")
     private Role role;
 
-    @OneToOne(mappedBy = "user")
-    @JsonBackReference
-    private Medecin medecin;
-    
-    @OneToOne(mappedBy = "user")
-    @JsonBackReference
-    private Patient patient;
-
-    @OneToOne(mappedBy = "user")
-    @JsonBackReference
-    private Admin admin;
 
 }

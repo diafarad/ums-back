@@ -27,7 +27,4 @@ public class Hopital {
     @Column(length = 200)
     private String adresse;
 
-    @OneToOne(mappedBy = "hopital")
-    @JsonBackReference
-    private Medecin medecin;
 }

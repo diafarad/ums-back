@@ -27,6 +27,9 @@ public class RendezVous {
     private Date dateRdv;
 
     @NotBlank
+    private String etat;
+
+    @NotBlank
     @ManyToOne
     @JoinColumn(name = "idMedecin")
     @JsonManagedReference

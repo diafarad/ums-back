@@ -39,8 +39,7 @@ public class Admin implements Serializable {
     @Column(length = 200)
     private String adresse;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
-    @JsonManagedReference
     private User user;
 }

@@ -44,12 +44,11 @@ public class Patient implements Serializable {
     @Column(length = 5)
     private String groupeSanguin;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
-    @JsonManagedReference
     private User user;
 
-    @OneToMany(mappedBy = "patient", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @OneToMany(mappedBy = "patient")
     @JsonBackReference
     private List<RendezVous> rendezVous;
 }

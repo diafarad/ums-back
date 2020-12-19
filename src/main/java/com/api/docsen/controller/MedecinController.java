@@ -108,7 +108,7 @@ public class MedecinController {
             }
             else
                 decodedString = "ko";
-            System.out.println("Photo : " + decodedString);
+            //System.out.println("Photo : " + decodedString);
             m.setSpecialite(listM.get(i).getSpecialite().getLibelle());
             m.setHopital(listM.get(i).getHopital().getNom());
             // m.setPhoto(listM.get(i).getUser().getImage().);

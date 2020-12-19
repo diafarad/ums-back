@@ -21,6 +21,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Base64;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -97,6 +98,14 @@ public class JwtAuthenticationController {
                 patientResponse.setEmail(u.getEmail());
                 patientResponse.setUsername(u.getUsername());
                 patientResponse.setPassword(u.getPassword());
+
+                String decodedString;
+                if (p.getUser().getImage() != null){
+                    decodedString = Base64.getEncoder().encodeToString(p.getUser().getImage());
+                    patientResponse.setPhoto(decodedString);
+                }
+                else
+                    decodedString = "ko";
                 //patientResponse.setPhoto(u.getPhoto());
                 return ResponseEntity.ok(new Response("ok", patientResponse));
             }

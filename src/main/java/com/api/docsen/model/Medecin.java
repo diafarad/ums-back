@@ -40,14 +40,12 @@ public class Medecin implements Serializable {
     @Column(length = 200)
     private String adresse;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "hopital_id")
-    @JsonManagedReference
     private Hopital hopital;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
-    @JsonManagedReference
     private User user;
 
     @OneToMany(mappedBy = "medecin", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
