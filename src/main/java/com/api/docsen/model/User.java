@@ -16,6 +16,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.sql.Blob;
 import java.util.Date;
+import java.util.List;
 
 
 @Entity
@@ -69,5 +70,8 @@ public class User{
     @JoinColumn(name = "role_id")
     private Role role;
 
+    @OneToMany(mappedBy = "user", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JsonBackReference
+    private List<PostComment> postComments;
 
 }

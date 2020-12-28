@@ -116,4 +116,13 @@ public class JwtAuthenticationController {
         }
         return ResponseEntity.ok(new Response("error", new ErrorResponse("INVALID_USERNAME")));
     }
+
+    @GetMapping("/getUtilisateur/{userName}")
+    @ResponseBody
+    public ResponseEntity<?> getUtilisateurByUsername(@PathVariable(value = "userName") String username){
+        PatientResponse patientResponse = null;
+        System.out.println("Parameter " + username);
+        User u = userRepository.findByUsername(username);
+        return ResponseEntity.ok(new Response("ok", u));
+    }
 }
