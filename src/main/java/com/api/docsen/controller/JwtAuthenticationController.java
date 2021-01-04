@@ -1,8 +1,10 @@
 package com.api.docsen.controller;
 
 import com.api.docsen.config.JwtTokenUtil;
+import com.api.docsen.dao.AdminRepository;
 import com.api.docsen.dao.PatientRepository;
 import com.api.docsen.dao.UserRepository;
+import com.api.docsen.model.Admin;
 import com.api.docsen.model.Patient;
 import com.api.docsen.model.User;
 import com.api.docsen.exchanges.*;
@@ -38,6 +40,8 @@ public class JwtAuthenticationController {
     private UserRepository userRepository;
     @Autowired
     private PatientRepository patientRepository;
+    @Autowired
+    private AdminRepository adminRepository;
 
 
     @PreAuthorize("hasAuthority('ROLE_USER') or hasAuthority('ROLE_ADMIN')")
@@ -108,6 +112,46 @@ public class JwtAuthenticationController {
                     decodedString = "ko";
                 //patientResponse.setPhoto(u.getPhoto());
                 return ResponseEntity.ok(new Response("ok", patientResponse));
+            }
+            else{
+                System.out.println("No result for Patient");
+                return ResponseEntity.ok(new Response("error", new ErrorResponse("NO_RESULT")));
+            }
+        }
+        return ResponseEntity.ok(new Response("error", new ErrorResponse("INVALID_USERNAME")));
+    }
+
+    @GetMapping("/getAdmin/{userName}")
+    @ResponseBody
+    public ResponseEntity<?> getAdministrateur(@PathVariable(value = "userName") String username){
+        AdminResponse adminResponse = null;
+        System.out.println("Parameter " + username);
+        User u = userRepository.findByUsername(username);
+        if (u != null){
+            System.out.println("Username : " + u.getUsername() + " Email : " + u.getEmail());
+            Admin a = adminRepository.getAdminByUserUsername(u.getUsername());
+            if (a != null){
+                System.out.println("Patient : " + a.getPrenom() + " " + a.getNom());
+                adminResponse = new AdminResponse();
+                adminResponse.setId(a.getId());
+                adminResponse.setPrenom(a.getPrenom());
+                adminResponse.setNom(a.getNom());
+                adminResponse.setDateNaiss(a.getDatenaissance());
+                adminResponse.setAdresse(a.getAdresse());
+                adminResponse.setTel(a.getTel());
+                adminResponse.setEmail(u.getEmail());
+                adminResponse.setUsername(u.getUsername());
+                adminResponse.setPassword(u.getPassword());
+
+                String decodedString;
+                if (a.getUser().getImage() != null){
+                    decodedString = Base64.getEncoder().encodeToString(a.getUser().getImage());
+                    adminResponse.setPhoto(decodedString);
+                }
+                else
+                    decodedString = "ko";
+                //patientResponse.setPhoto(u.getPhoto());
+                return ResponseEntity.ok(new Response("ok", adminResponse));
             }
             else{
                 System.out.println("No result for Patient");

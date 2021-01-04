@@ -39,8 +39,6 @@ public class HopitalController {
 
     @PostMapping("/takerdv")
     public ResponseEntity<?> addRdv(@RequestBody RdvRequest rdvRequest) throws IOException {
-        System.out.println("Date : " + rdvRequest.getDateRdv() + ", Id MED : " + rdvRequest.getIdMedecin());
-        System.out.println("Id Pat : " + rdvRequest.getIdPatient());
         Medecin m = medecinRepository.getOne(rdvRequest.getIdMedecin());
         //System.out.println("Medecin : " +m.getPrenom()+ " " + m.getId());
         Patient p = patientRepository.getOne(rdvRequest.getIdPatient());
@@ -62,6 +60,54 @@ public class HopitalController {
         else {
             System.out.println("Date NONE");
             return ResponseEntity.ok(new Response("error", new ErrorResponse("RDV_FAIL")));
+        }
+    }
+
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    @GetMapping("/allRdv")
+    public @ResponseBody List<RdvResponse> findAllRdv(){
+        List<RdvResponse> list = new ArrayList<>();
+        List<RendezVous> listM = rdvRepository.findAllByOrderByIdDesc();
+        for (int i = 0; i < listM.size(); i++) {
+            RdvResponse r = new RdvResponse();
+            r.setId(listM.get(i).getId());
+            r.setDateRdv(listM.get(i).getDateRdv());
+            r.setMedecin(listM.get(i).getMedecin().getPrenom() + " " + listM.get(i).getMedecin().getNom());
+            r.setHopital(listM.get(i).getMedecin().getHopital().getNom());
+            r.setAdresse(listM.get(i).getMedecin().getHopital().getAdresse());
+            r.setPatient(listM.get(i).getPatient().getPrenom()+" "+listM.get(i).getPatient().getNom());
+            String decodedString;
+            if (listM.get(i).getPatient().getUser().getImage() != null){
+                decodedString = Base64.getEncoder().encodeToString(listM.get(i).getPatient().getUser().getImage());
+                r.setPhotoUser(decodedString);
+            }
+            list.add(r);
+        }
+        return list;
+    }
+
+    @GetMapping("/getRdv/{id}")
+    @ResponseBody
+    public ResponseEntity<?> showDetailsRdv(@PathVariable(value = "id") Long id) {
+        RendezVous rdv = rdvRepository.getOne(id);
+        if (rdv != null){
+            RdvResponse rdvResponse = new RdvResponse();
+            rdvResponse.setId(rdv.getId());
+            rdvResponse.setAdresse(rdv.getMedecin().getHopital().getAdresse());
+            rdvResponse.setPatient(rdv.getPatient().getPrenom() + " " + rdv.getPatient().getNom());
+            rdvResponse.setHopital(rdv.getMedecin().getHopital().getNom());
+            rdvResponse.setMedecin(rdv.getMedecin().getPrenom()+" "+rdv.getMedecin().getNom());
+            rdvResponse.setDateRdv(rdv.getDateRdv());
+            String decodedString;
+            if (rdv.getPatient().getUser().getImage() != null){
+                decodedString = Base64.getEncoder().encodeToString(rdv.getPatient().getUser().getImage());
+                rdvResponse.setPhotoUser(decodedString);
+            }
+            return ResponseEntity.ok(new Response("ok", rdvResponse));
+        }
+        else{
+            System.out.println("No result for RDV");
+            return ResponseEntity.ok(new Response("error", new ErrorResponse("INVALID_ID_RDV")));
         }
     }
 

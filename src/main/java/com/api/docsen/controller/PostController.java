@@ -15,6 +15,7 @@ import com.api.docsen.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -160,6 +161,7 @@ public class PostController {
         return list;
     }
 
+    @PreAuthorize("hasAuthority('ROLE_USER') or hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_MEDECIN')")
     @GetMapping("/getLastPost")
     @ResponseBody
     public ResponseEntity<?> getLastPost() {
