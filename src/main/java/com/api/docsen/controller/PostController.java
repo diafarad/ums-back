@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequestMapping(value = "/api/post")
@@ -42,9 +43,46 @@ public class PostController {
     @Autowired
     AdminRepository adminRepository;
 
+    @PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_MEDECIN')")
+    @GetMapping("/post/{id}")
+    public @ResponseBody PostDto getPost(@PathVariable Long id) {
+        Post post = postRepository.getOne(id);
+        PostDto po = new PostDto();
+        po.setId(post.getId());
+        po.setContent(post.getContent());
+        po.setTitle(post.getTitle());
+          String decodedString;
+           if(post.getImage()!=null){
+            decodedString = Base64.getEncoder().encodeToString(post.getImage());
+            po.setImage(decodedString);
+           }else{
+            po.setImage("null");
+           }
+        
+        return po;
+    }
+
     @PostMapping("/add")
     public ResponseEntity<?> createPost(@RequestBody PostDto postDto) {
-        Base64.Decoder decoder = Base64.getDecoder();
+        if(postDto.getId()!=0){
+
+            Base64.Decoder decoder = Base64.getDecoder();
+        String encoded = postDto.getImage();
+        Admin admin = adminRepository.getAdminByUserUsername(postDto.getUsername());
+        System.out.println("ADMIN : "+admin.getPrenom());
+
+        Post p = new Post();
+        p.setId(postDto.getId());
+        p.setTitle(postDto.getTitle());
+        p.setContent(postDto.getContent());
+        p.setImage(decoder.decode(encoded));
+        p.setCreatedOn(postDto.getDateCreate());
+        p.setUpdatedOn(new Date());
+        p.setAdmin(admin);
+        Post p1 = postRepository.save(p);
+        return ResponseEntity.ok(new Response("ok", new PostDto()));
+        }else{
+            Base64.Decoder decoder = Base64.getDecoder();
         String encoded = postDto.getImage();
         Admin admin = adminRepository.getAdminByUserUsername(postDto.getUsername());
         System.out.println("ADMIN : "+admin.getPrenom());
@@ -57,6 +95,7 @@ public class PostController {
         p.setAdmin(admin);
         Post p1 = postRepository.save(p);
         return ResponseEntity.ok(new Response("ok", new PostDto()));
+        }
     }
 
     @PostMapping("/addComment")
@@ -103,17 +142,26 @@ public class PostController {
         return ResponseEntity.ok(new Response("ok", new PostDto()));
     }
 
+   
+
+
     @GetMapping("/all")
     public @ResponseBody List<PostDto> showAllPosts() {
         List<PostDto> list = new ArrayList<>();
         List<Post> listM = postRepository.findAll();
         for (int i = 0; i < listM.size(); i++) {
             PostDto p = new PostDto();
+            int like=0;
+            System.out.println(listM.get(i).getId());
+          for(int j=0; j<listM.get(i).getPostComments().size(); j++){
+                like=like+listM.get(i).getPostComments().get(j).getLikes();
+          }
+          System.out.println(like);
             p.setId(listM.get(i).getId());
             p.setTitle(listM.get(i).getTitle());
             p.setContent(listM.get(i).getContent());
             p.setDateCreate(listM.get(i).getCreatedOn());
-            p.setLikes(listM.get(i).getLikes());
+            p.setLikes(like);
             String decodedString;
             if (listM.get(i).getImage() != null){
                 decodedString = Base64.getEncoder().encodeToString(listM.get(i).getImage());

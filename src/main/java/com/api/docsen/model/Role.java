@@ -12,10 +12,7 @@ import javax.persistence.*;
 import java.util.List;
 
 @Entity
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
+
 @Table(name = "roles")
 public class Role {
     @Id
@@ -30,6 +27,7 @@ public class Role {
     @JsonBackReference
     @OneToMany(mappedBy = "role")
     private List<User> users;
+    
 
     public Role(RoleName name){
         this.name = name;
@@ -39,4 +37,32 @@ public class Role {
     public String toString() {
         return name.toString();
     }
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public RoleName getName() {
+		return name;
+	}
+
+	public void setName(RoleName name) {
+		this.name = name;
+	}
+
+	public List<User> getUsers() {
+		return users;
+	}
+
+	public void setUsers(List<User> users) {
+		this.users = users;
+	}
+
+	public Role() {
+	}
+    
 }

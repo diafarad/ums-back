@@ -2,9 +2,11 @@ package com.api.docsen.controller;
 
 import com.api.docsen.config.JwtTokenUtil;
 import com.api.docsen.dao.AdminRepository;
+import com.api.docsen.dao.MedecinRepository;
 import com.api.docsen.dao.PatientRepository;
 import com.api.docsen.dao.UserRepository;
 import com.api.docsen.model.Admin;
+import com.api.docsen.model.Medecin;
 import com.api.docsen.model.Patient;
 import com.api.docsen.model.User;
 import com.api.docsen.exchanges.*;
@@ -21,6 +23,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Base64;
@@ -42,6 +45,11 @@ public class JwtAuthenticationController {
     private PatientRepository patientRepository;
     @Autowired
     private AdminRepository adminRepository;
+    @Autowired
+    private MedecinRepository  medecinRepository;
+
+    @Autowired
+    PasswordEncoder encoder;
 
 
     @PreAuthorize("hasAuthority('ROLE_USER') or hasAuthority('ROLE_ADMIN')")
@@ -67,8 +75,9 @@ public class JwtAuthenticationController {
                 SecurityContextHolder.getContext().setAuthentication(authentication);
 
                 String jwt = jwtTokenUtil.generateToken(details);
-                System.out.println(jwt);
                 UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+                System.out.println("PPPPPP"+jwt + "PPPPPP"+ userDetails.getUsername() +  "PPPPPP"+userDetails.getAuthorities() );
+                
                 ResponseJwt responseJwt = new ResponseJwt(jwt, userDetails.getUsername(), userDetails.getAuthorities());
                 return ResponseEntity.ok(new Response("ok", responseJwt));
             } catch (DisabledException e) {
@@ -78,6 +87,24 @@ public class JwtAuthenticationController {
             }
         }
         return ResponseEntity.ok(new Response("error", new ErrorResponse("INVALID_USERNAME")));
+    }
+
+    @PostMapping("/admin/adminEdite")
+    @ResponseBody
+    public ResponseEntity<?>editeProfil(@RequestBody AdminResponse adminResponse){
+        User u = userRepository.getOne(adminResponse.getIdUser());
+
+        if(encoder.matches(adminResponse.getPassWrd(), u.getPassword())){
+
+            u.setId(adminResponse.getIdUser());
+            u.setUsername(adminResponse.getUsername());
+            u.setPassword(encoder.encode(adminResponse.getPassword()));
+            userRepository.save(u);
+            return ResponseEntity.ok(new Response("ok", adminResponse));
+        }else
+        {
+            return ResponseEntity.ok(new Response("error", new ErrorResponse("Le mot de passe incorrect")));
+        }
     }
 
     @GetMapping("/getUser/{userName}")
@@ -140,6 +167,7 @@ public class JwtAuthenticationController {
                 adminResponse.setAdresse(a.getAdresse());
                 adminResponse.setTel(a.getTel());
                 adminResponse.setEmail(u.getEmail());
+                adminResponse.setIdUser(u.getId());
                 adminResponse.setUsername(u.getUsername());
                 adminResponse.setPassword(u.getPassword());
 
@@ -168,5 +196,36 @@ public class JwtAuthenticationController {
         System.out.println("Parameter " + username);
         User u = userRepository.findByUsername(username);
         return ResponseEntity.ok(new Response("ok", u));
+    }
+
+    @GetMapping("/getMedecin/{userName}")
+    @ResponseBody
+    public ResponseEntity<?> getMedecinByUsername(@PathVariable(value = "userName") String username){
+        MedecinAdminResponse med = null;
+        System.out.println("Parameter " + username);
+        User u = userRepository.findByUsername(username);
+        Medecin m = medecinRepository.findMedecinByUser_Username(u.getUsername());
+        if(m!=null){
+            med=new MedecinAdminResponse();
+            med.setNom(m.getNom());
+            med.setPrenom(m.getPrenom());
+            med.setUsername(u.getUsername());
+            med.setTel(m.getTel());
+            med.setEmail(u.getEmail());
+            med.setIdMedecin(u.getId());
+            med.setAdresse(m.getAdresse());
+            med.setDateNaiss(m.getDatenaissance());
+            String decodedString;
+                if (m.getUser().getImage() != null){
+                    decodedString = Base64.getEncoder().encodeToString(m.getUser().getImage());
+                    med.setPhoto(decodedString);
+                }
+                else
+                    decodedString = "ko";
+                //patientResponse.setPhoto(u.getPhoto());
+                
+            return ResponseEntity.ok(new Response("ok", med));
+        }
+         return ResponseEntity.ok(new Response("error", new ErrorResponse("INVALID_USERNAME")));
     }
 }

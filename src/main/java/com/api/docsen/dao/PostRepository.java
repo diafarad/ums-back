@@ -10,4 +10,6 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     public int getIdRoleAdmin();
 
     public Post findTopByOrderByIdDesc();
+
+    
 }

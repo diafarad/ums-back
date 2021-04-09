@@ -9,7 +9,18 @@ public class PostDto {
     private String image;
     private String username;
     private Date dateCreate;
+    private Date dateUp;
     private int likes;
+
+
+    public Date getDateUp() {
+        return this.dateUp;
+    }
+
+    public void setDateUp(Date dateUp) {
+        this.dateUp = dateUp;
+    }
+
 
     public int getLikes() {
         return likes;

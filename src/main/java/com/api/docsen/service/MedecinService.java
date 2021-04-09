@@ -20,4 +20,8 @@ public class MedecinService implements IMedecinService {
     public List<Medecin> findAll() {
         return medecinRepository.findAll();
     }
+
+    public Medecin getMede(Long id){
+        return medecinRepository.getOne(id);
+    }
 }
