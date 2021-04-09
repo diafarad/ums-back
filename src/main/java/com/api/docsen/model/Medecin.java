@@ -13,10 +13,7 @@ import java.util.List;
 
 //@EqualsAndHashCode(exclude = {"service", "specialites"})
 @Entity
-@Setter
-@Getter
-@NoArgsConstructor
-@AllArgsConstructor
+
 public class Medecin implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -60,4 +57,97 @@ public class Medecin implements Serializable {
     @JoinColumn(name = "idSpecialite")
     @JsonManagedReference
     private Specialite specialite;
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public String getNom() {
+        return nom;
+    }
+
+    public void setNom(String nom) {
+        this.nom = nom;
+    }
+
+    public String getPrenom() {
+        return prenom;
+    }
+
+    public void setPrenom(String prenom) {
+        this.prenom = prenom;
+    }
+
+    public Date getDatenaissance() {
+        return datenaissance;
+    }
+
+    public void setDatenaissance(Date datenaissance) {
+        this.datenaissance = datenaissance;
+    }
+
+    public String getTel() {
+        return tel;
+    }
+
+    public void setTel(String tel) {
+        this.tel = tel;
+    }
+
+    public String getAdresse() {
+        return adresse;
+    }
+
+    public void setAdresse(String adresse) {
+        this.adresse = adresse;
+    }
+
+    public Hopital getHopital() {
+        return hopital;
+    }
+
+    public void setHopital(Hopital hopital) {
+        this.hopital = hopital;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public List<RendezVous> getRendezVous() {
+        return rendezVous;
+    }
+
+    public void setRendezVous(List<RendezVous> rendezVous) {
+        this.rendezVous = rendezVous;
+    }
+
+    public List<Note> getNotes() {
+        return notes;
+    }
+
+    public void setNotes(List<Note> notes) {
+        this.notes = notes;
+    }
+
+    public Specialite getSpecialite() {
+        return specialite;
+    }
+
+    public void setSpecialite(Specialite specialite) {
+        this.specialite = specialite;
+  }
+
+  public Medecin() {
+  }
+  
+
 }
